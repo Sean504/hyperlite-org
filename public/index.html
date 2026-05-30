@@ -397,18 +397,51 @@
     .kb-a { color: var(--muted); font-size: 0.7rem; }
 
     /* ── footer ──────────────────────────────────────────────────────── */
-    .footer-wrap { border-top: 1px solid var(--border); padding: 1.5rem; }
+    .footer-wrap {
+      border-top: 1px solid var(--border);
+      padding: 3rem 1.5rem 2.5rem;
+      background: var(--bg2);
+    }
     .footer {
       max-width: 1080px; margin: 0 auto;
       display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 0.75rem;
-      font-size: 0.68rem; color: var(--dim);
+      flex-wrap: wrap; gap: 2rem;
     }
-    .footer-logo { color: var(--purple); font-weight: 700; }
-    .footer-logo span { color: var(--teal); }
-    .footer-links { display: flex; gap: 1.5rem; }
-    .footer-links a { color: var(--muted); transition: color 0.15s; }
-    .footer-links a:hover { color: var(--teal); }
+    .footer-left { display: flex; flex-direction: column; gap: 0.4rem; }
+    .footer-logo {
+      font-family: var(--mono);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--purple);
+      letter-spacing: 0.02em;
+      text-shadow: 0 0 20px rgba(189,147,249,0.35);
+    }
+    .footer-logo span {
+      color: var(--teal);
+      text-shadow: 0 0 20px rgba(0,245,212,0.35);
+    }
+    .footer-tag {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+    .footer-tag::before { content: '> '; color: var(--teal); }
+    .footer-npm {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      border: 1px solid var(--border);
+      padding: 0.6rem 1.2rem;
+      color: var(--teal);
+      font-size: 0.8rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .footer-npm:hover {
+      border-color: var(--teal);
+      box-shadow: 0 0 12px rgba(0,245,212,0.12);
+    }
+    .footer-npm .fp { color: var(--dim); }
+    .footer-npm .fa { color: var(--muted); font-size: 0.65rem; }
 
     /* ── responsive ──────────────────────────────────────────────────── */
 
@@ -752,10 +785,13 @@
 <!-- footer -->
 <div class="footer-wrap">
   <div class="footer">
-    <span class="footer-logo">Hyper<span>Lite</span></span>
-    <div class="footer-links">
-      <a href="https://www.npmjs.com/package/hyperlite-ai" target="_blank">npm</a>
+    <div class="footer-left">
+      <span class="footer-logo">Hyper<span>Lite</span></span>
+      <span class="footer-tag">terminal-native local AI · offline · open source</span>
     </div>
+    <a class="footer-npm" href="https://www.npmjs.com/package/hyperlite-ai" target="_blank">
+      <span class="fp">$</span> npm install -g hyperlite-ai <span class="fa">↗</span>
+    </a>
   </div>
 </div>
 
