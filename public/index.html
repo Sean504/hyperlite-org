@@ -142,6 +142,7 @@
       color: var(--muted);
       letter-spacing: 0.08em;
       margin-bottom: 0.5rem;
+      word-break: break-word;
     }
     .hero-meta {
       font-size: 0.75rem;
@@ -346,7 +347,7 @@
     .prov-table tr:last-child td { border-bottom: none; }
     .prov-table .n { color: var(--text); }
     .prov-table .port { color: var(--teal); font-size: 0.68rem; }
-    .prov-table .auto { color: var(--green); font-size: 0.62rem; border: 1px solid rgba(80,250,123,0.3); padding: 0.08rem 0.35rem; }
+    .prov-table .auto { color: var(--green); font-size: 0.62rem; border: 1px solid rgba(80,250,123,0.3); padding: 0.08rem 0.35rem; white-space: nowrap; }
     .prov-table .fmt { color: var(--purple); font-size: 0.66rem; }
 
     /* ── install ─────────────────────────────────────────────────────── */
@@ -435,7 +436,9 @@
       .install-grid { grid-template-columns: 1fr; }
       .kb-grid { grid-template-columns: 1fr 1fr; }
       .tool-list { grid-template-columns: repeat(2, 1fr); }
-      .topbar-nav { display: none; }
+      /* show nav at smaller size, hide the domain text instead */
+      .topbar-nav { display: flex; gap: 1rem; font-size: 0.65rem; }
+      .topbar-right { display: none; }
       .section { padding: 2.5rem 1.25rem; }
       .showcase { gap: 2rem; margin-bottom: 3rem; }
     }
@@ -446,17 +449,20 @@
       .logo-wrap pre { font-size: 0.42rem; }
       .section { padding: 2rem 1rem; }
       .hero-inner { padding: 1.5rem 1rem 2rem; }
-      .hero-sub { font-size: 0.68rem; letter-spacing: 0.04em; }
+      .hero-sub { font-size: 0.68rem; letter-spacing: 0.02em; }
       .hero-meta { font-size: 0.68rem; margin-bottom: 1.5rem; }
       .install-pill { font-size: 0.72rem; padding: 0.45rem 0.8rem; }
       .showcase-copy h2 { font-size: 0.9rem; }
       .prov-table th:nth-child(3),
       .prov-table td:nth-child(3) { display: none; }
+      /* tighten topbar nav even more */
+      .topbar-nav { gap: 0.75rem; font-size: 0.6rem; }
     }
 
     @media (max-width: 380px) {
       .logo-wrap pre { font-size: 0.36rem; }
       .tool-list { grid-template-columns: 1fr; }
+      .topbar-nav a:nth-child(3) { display: none; } /* hide backends link on tiny screens */
     }
   </style>
 </head>
@@ -490,8 +496,8 @@
  \___|_  / / ____||   __/ \___  &gt;__|  <span class="logo-t">|_______ \__||__|  \___  &gt;</span>
        \/  \/     |__|        \/      <span class="logo-t">        \/             \/ </span></pre></div>
 
-    <div class="hero-sub">terminal-native &nbsp;·&nbsp; local-only &nbsp;·&nbsp; blazing fast &nbsp;·&nbsp; no cloud &nbsp;·&nbsp; no api key &nbsp;·&nbsp; no telemetry</div>
-    <div class="hero-meta">Linux &nbsp;·&nbsp; macOS &nbsp;·&nbsp; Windows &nbsp;·&nbsp; RPi5</div>
+    <div class="hero-sub">terminal-native · local-only · blazing fast · no cloud · no api key · no telemetry</div>
+    <div class="hero-meta">Linux · macOS · Windows · RPi5</div>
 
     <div class="install-pill"><span class="p">$</span> npm install -g hyperlite-ai</div>
     <div style="display:flex;align-items:center;justify-content:center;gap:0.75rem;margin-top:0.4rem">
@@ -743,10 +749,7 @@
   <div class="footer">
     <span class="footer-logo">Hyper<span>Lite</span></span>
     <div class="footer-links">
-      <a href="https://github.com/Sean504/HyperLite" target="_blank">github</a>
-      <a href="https://github.com/Sean504/HyperLite/releases" target="_blank">releases</a>
       <a href="https://www.npmjs.com/package/hyperlite-ai" target="_blank">npm</a>
-      <a href="https://github.com/Sean504/HyperLite/blob/main/DOCS.md" target="_blank">docs</a>
     </div>
     <span>MIT · hyperlite.org · no cloud · no telemetry</span>
   </div>
