@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HyperLite — terminal-native local AI</title>
+  <meta name="description" content="Offline-first AI in your terminal. No cloud. No telemetry. One binary." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #080812;
+      --bg2:     #0d0d1a;
+      --surface: #10101e;
+      --border:  #1e1e36;
+      --purple:  #bd93f9;
+      --teal:    #00f5d4;
+      --green:   #50fa7b;
+      --yellow:  #f1fa8c;
+      --text:    #e0dfff;
+      --muted:   #5a5a8a;
+      --dim:     #37375a;
+      --mono:    'JetBrains Mono', 'Courier New', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 14px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    ::selection { background: var(--purple); color: var(--bg); }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 2px,
+        rgba(0,0,0,0.035) 2px,
+        rgba(0,0,0,0.035) 4px
+      );
+    }
+
+    /* ── topbar ──────────────────────────────────────────────────────── */
+    .topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+      height: 34px;
+      font-size: 0.72rem;
+    }
+    .topbar-logo { color: var(--purple); font-weight: 700; letter-spacing: 0.02em; }
+    .topbar-logo span { color: var(--teal); }
+    .topbar-nav { display: flex; gap: 1.75rem; }
+    .topbar-nav a { color: var(--muted); transition: color 0.15s; }
+    .topbar-nav a:hover { color: var(--teal); }
+    .topbar-right { font-size: 0.68rem; color: var(--dim); display: flex; gap: 1rem; }
+    .topbar-right .v { color: var(--green); }
+
+    /* ── hero ────────────────────────────────────────────────────────── */
+    .hero {
+      padding-top: 34px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(30,30,54,0.35) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(30,30,54,0.35) 1px, transparent 1px);
+      background-size: 44px 44px;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 2rem 1.5rem 2.5rem;
+      width: 100%;
+      max-width: 1080px;
+    }
+
+    /* ── ASCII logo ── plain pre, no inline spans, CSS does color ────── */
+    .logo-wrap {
+      display: inline-block;
+      margin-bottom: 0.9rem;
+      animation: flicker 9s infinite;
+    }
+    .logo-wrap pre {
+      font-family: var(--mono);
+      font-size: clamp(0.55rem, 1.37vw, 0.94rem);
+      line-height: 1.2;
+      white-space: pre;
+      text-align: left;
+      color: var(--purple);
+      text-shadow:
+        0 0 18px rgba(189,147,249,0.55),
+        0 0 40px rgba(189,147,249,0.18);
+    }
+    /* rows 1,3,5 (0-indexed 0,2,4) teal — achieved via nth-line trick using spans */
+    .logo-t { color: var(--teal); text-shadow: 0 0 18px rgba(0,245,212,0.55), 0 0 40px rgba(0,245,212,0.18); }
+
+    @keyframes flicker {
+      0%,94%,100% { opacity: 1; }
+      95% { opacity: 0.9; }
+      96% { opacity: 1; }
+      97.5% { opacity: 0.85; }
+      98% { opacity: 1; }
+    }
+
+    .hero-sub {
+      font-size: 0.78rem;
+      color: var(--teal);
+      letter-spacing: 0.13em;
+      margin-bottom: 0.4rem;
+    }
+    .hero-meta {
+      font-size: 0.68rem;
+      color: var(--dim);
+      margin-bottom: 2.5rem;
+    }
+
+    .install-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.55rem 1.1rem;
+      font-size: 0.82rem;
+      color: var(--teal);
+      margin-bottom: 0.6rem;
+      cursor: text;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      user-select: all;
+    }
+    .install-pill:hover { border-color: var(--teal); box-shadow: 0 0 10px rgba(0,245,212,0.12); }
+    .install-pill .p { color: var(--dim); }
+
+    .hero-hint {
+      font-size: 0.67rem;
+      color: var(--dim);
+      margin-bottom: 3.5rem;
+    }
+    .hero-hint a { color: var(--purple); }
+    .hero-hint a:hover { text-decoration: underline; }
+
+    /* cursor */
+    .cur {
+      display: inline-block;
+      width: 7px; height: 13px;
+      background: var(--purple);
+      vertical-align: middle;
+      margin-left: 2px;
+      animation: blink 1.1s step-end infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ── section shared ──────────────────────────────────────────────── */
+    .section {
+      padding: 4rem 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .section-inner { max-width: 1080px; margin: 0 auto; }
+
+    .sec-head {
+      font-size: 0.68rem;
+      color: var(--teal);
+      letter-spacing: 0.1em;
+      margin-bottom: 2.5rem;
+    }
+    .sec-head::before { content: '──[ '; color: var(--dim); }
+    .sec-head::after  { content: ' ]──────────────────────────────────'; color: var(--dim); }
+
+    /* ── showcase rows ───────────────────────────────────────────────── */
+    .showcase {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      margin-bottom: 4.5rem;
+    }
+    .showcase:last-child { margin-bottom: 0; }
+    .showcase.flip { direction: rtl; }
+    .showcase.flip > * { direction: ltr; }
+
+    .shot-frame {
+      border: 1px solid var(--purple);
+      background: var(--bg);
+      overflow: hidden;
+    }
+    .shot-frame.dim-border { border-color: var(--border); }
+    .shot-bar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.28rem 0.75rem;
+      font-size: 0.62rem;
+      color: var(--dim);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .shot-bar .dot { font-size: 0.55rem; }
+    .shot-frame img { display: block; width: 100%; filter: brightness(0.96) saturate(1.05); }
+
+    .showcase-copy {}
+    .showcase-copy .label {
+      font-size: 0.65rem;
+      color: var(--dim);
+      margin-bottom: 0.6rem;
+      letter-spacing: 0.08em;
+    }
+    .showcase-copy .label::before { content: '> '; color: var(--teal); }
+    .showcase-copy h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--purple);
+      margin-bottom: 1rem;
+      line-height: 1.3;
+    }
+    .showcase-copy p {
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 0.75rem;
+    }
+    .showcase-copy p:last-child { margin-bottom: 0; }
+    .showcase-copy .hi { color: var(--teal); }
+    .showcase-copy .hi-g { color: var(--green); }
+    .showcase-copy .hi-y { color: var(--yellow); }
+
+    .tag-row { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 1rem; }
+    .tag {
+      font-size: 0.62rem;
+      color: var(--purple);
+      border: 1px solid rgba(189,147,249,0.25);
+      padding: 0.12rem 0.45rem;
+    }
+    .tag.t { color: var(--teal); border-color: rgba(0,245,212,0.25); }
+    .tag.g { color: var(--green); border-color: rgba(80,250,123,0.25); }
+
+    /* ── features grid ───────────────────────────────────────────────── */
+    .feat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+    .feat {
+      background: var(--bg);
+      padding: 1.25rem 1.4rem;
+      transition: background 0.15s;
+    }
+    .feat:hover { background: var(--surface); }
+    .feat .fl {
+      font-size: 0.62rem;
+      color: var(--dim);
+      margin-bottom: 0.55rem;
+      letter-spacing: 0.07em;
+    }
+    .feat .fl::before { content: '> '; color: var(--teal); }
+    .feat h3 { font-size: 0.82rem; font-weight: 700; color: var(--purple); margin-bottom: 0.45rem; }
+    .feat p { font-size: 0.72rem; color: var(--muted); line-height: 1.65; }
+
+    /* ── tools ───────────────────────────────────────────────────────── */
+    .tools-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.25rem 1.4rem;
+      font-size: 0.73rem;
+    }
+    .tools-block .cmd { color: var(--teal); margin-bottom: 0.25rem; }
+    .tools-block .cmd::before { content: '$ '; color: var(--dim); }
+    .tools-block .sub { font-size: 0.65rem; color: var(--dim); margin-bottom: 0.9rem; }
+
+    .tool-list {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.2rem 0;
+    }
+    .tl { color: var(--text); font-size: 0.71rem; }
+    .tl::before { content: '·  '; color: var(--purple); }
+    .tl.y { color: var(--yellow); }
+    .tl.y::before { content: '⚡ '; color: var(--yellow); }
+
+    .tools-note {
+      margin-top: 0.9rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.66rem;
+      color: var(--dim);
+    }
+    .tools-note .y { color: var(--yellow); }
+
+    /* ── providers ───────────────────────────────────────────────────── */
+    .prov-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.73rem;
+    }
+    .prov-table th {
+      text-align: left;
+      color: var(--dim);
+      font-weight: 500;
+      font-size: 0.65rem;
+      letter-spacing: 0.07em;
+      padding: 0.4rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .prov-table td {
+      padding: 0.42rem 0.75rem;
+      border-bottom: 1px solid rgba(30,30,54,0.5);
+      color: var(--muted);
+    }
+    .prov-table tr:last-child td { border-bottom: none; }
+    .prov-table .n { color: var(--text); }
+    .prov-table .port { color: var(--teal); font-size: 0.68rem; }
+    .prov-table .auto { color: var(--green); font-size: 0.62rem; border: 1px solid rgba(80,250,123,0.3); padding: 0.08rem 0.35rem; }
+    .prov-table .fmt { color: var(--purple); font-size: 0.66rem; }
+
+    /* ── install ─────────────────────────────────────────────────────── */
+    .install-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .iblock { background: var(--surface); border: 1px solid var(--border); }
+    .iblock-head {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 0.32rem 0.75rem;
+      font-size: 0.63rem;
+      color: var(--muted);
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .iblock-head .d { color: var(--purple); }
+    .iblock-head .dt { color: var(--teal); }
+    .iblock-head .dg { color: var(--green); }
+    .iblock-body { padding: 0.85rem 1rem; font-size: 0.73rem; line-height: 2; }
+    .lc { color: var(--text); }
+    .lc::before { content: '$ '; color: var(--teal); }
+    .lo { color: var(--green); }
+    .lo::before { content: '→ '; color: var(--dim); }
+    .lm { color: var(--dim); }
+    .lm::before { content: '# '; }
+
+    /* ── keybinds ────────────────────────────────────────────────────── */
+    .kb-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      font-size: 0.73rem;
+    }
+    .kb { background: var(--bg); display: flex; align-items: center; justify-content: space-between; padding: 0.48rem 0.9rem; transition: background 0.15s; }
+    .kb:hover { background: var(--surface); }
+    .kb-k { background: var(--surface); border: 1px solid var(--border); color: var(--purple); padding: 0.08rem 0.38rem; font-size: 0.66rem; }
+    .kb-a { color: var(--muted); font-size: 0.7rem; }
+
+    /* ── footer ──────────────────────────────────────────────────────── */
+    .footer-wrap { border-top: 1px solid var(--border); padding: 1.5rem; }
+    .footer {
+      max-width: 1080px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 0.75rem;
+      font-size: 0.68rem; color: var(--dim);
+    }
+    .footer-logo { color: var(--purple); font-weight: 700; }
+    .footer-logo span { color: var(--teal); }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { color: var(--muted); transition: color 0.15s; }
+    .footer-links a:hover { color: var(--teal); }
+
+    /* ── responsive ──────────────────────────────────────────────────── */
+    @media (max-width: 860px) {
+      .showcase, .showcase.flip { grid-template-columns: 1fr; direction: ltr; }
+      .feat-grid { grid-template-columns: 1fr 1fr; }
+      .install-grid { grid-template-columns: 1fr; }
+      .kb-grid { grid-template-columns: 1fr 1fr; }
+      .tool-list { grid-template-columns: repeat(2, 1fr); }
+      .topbar-nav { display: none; }
+    }
+    @media (max-width: 540px) {
+      .feat-grid { grid-template-columns: 1fr; }
+      .kb-grid { grid-template-columns: 1fr; }
+      .logo-wrap pre { font-size: 0.42rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- topbar -->
+<div class="topbar">
+  <div style="display:flex;align-items:center;gap:1.75rem">
+    <span class="topbar-logo">Hyper<span>Lite</span></span>
+    <nav class="topbar-nav">
+      <a href="#features">features</a>
+      <a href="#tools">tools</a>
+      <a href="#install">install</a>
+      <a href="https://github.com/Sean504/HyperLite" target="_blank">github</a>
+    </nav>
+  </div>
+  <div class="topbar-right">
+    <span>hyperlite.org</span>
+    <span class="v">v0.2.15</span>
+    <span>MIT</span>
+  </div>
+</div>
+
+<!-- hero -->
+<div class="hero">
+  <div class="hero-inner">
+
+    <div class="logo-wrap">
+      <pre>  ___ ___                             .____    .__  __
+ /   |   \ ___.__.______   ___________|    |   |__|/  |_  ____
+/    ~    &lt;   |  |\____ \_/ __ \_  __ \    |   |  \   __\/ __ \
+\    Y    /\___  ||  |_&gt; &gt;  ___/|  | \/    |___|  ||  | \  ___/
+ \___|_  / / ____||   __/ \___  &gt;__|  |_______ \__||__|  \___  &gt;
+       \/  \/     |__|        \/              \/             \/ </pre>
+    </div>
+
+    <div class="hero-sub">terminal-native &nbsp;·&nbsp; local-only &nbsp;·&nbsp; blazing fast</div>
+    <div class="hero-meta">v0.2.15 &nbsp;·&nbsp; Linux · macOS · Windows · RPi5 &nbsp;·&nbsp; MIT</div>
+
+    <div class="install-pill"><span class="p">$</span> npm install -g hyperlite-ai</div>
+    <br/>
+    <div class="hero-hint" style="margin-top:0.5rem">
+      then run <a href="#install">hl</a> &nbsp;·&nbsp; no cloud &nbsp;·&nbsp; no api key &nbsp;·&nbsp; no telemetry &nbsp;&nbsp;<span class="cur"></span>
+    </div>
+
+  </div>
+</div>
+
+<!-- features -->
+<div class="section" id="features">
+  <div class="section-inner">
+    <div class="sec-head">FEATURES</div>
+    <div class="feat-grid">
+      <div class="feat">
+        <div class="fl">offline_first</div>
+        <h3>Zero cloud</h3>
+        <p>No API keys. No usage tracking. No network after the initial model download. Everything runs on your hardware.</p>
+      </div>
+      <div class="feat">
+        <div class="fl">performance</div>
+        <h3>Rust all the way down</h3>
+        <p>TUI visible in milliseconds. Sessions load instantly. Streamed tokens hit the screen with no runtime overhead.</p>
+      </div>
+      <div class="feat">
+        <div class="fl">agentic</div>
+        <h3>Tools built in</h3>
+        <p>The model reads files, edits code, runs shell commands, searches the web, and chains multi-step tasks inside the terminal.</p>
+      </div>
+      <div class="feat">
+        <div class="fl">any_backend</div>
+        <h3>Works with everything</h3>
+        <p>llamafile auto-managed, or connect to llama.cpp, LM Studio, Ollama, KoboldCpp, LocalAI, vLLM, Jan, GPT4All.</p>
+      </div>
+      <div class="feat">
+        <div class="fl">rendering</div>
+        <h3>Rich TUI</h3>
+        <p>Full markdown, syntax highlighting, collapsible reasoning blocks from thinking models, fuzzy search dialogs.</p>
+      </div>
+      <div class="feat">
+        <div class="fl">persistence</div>
+        <h3>Session history</h3>
+        <p>Every conversation in SQLite with WAL mode and 256 MB mmap. Instant load. Fuzzy search across all sessions.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- showcase rows -->
+<div class="section" id="showcase">
+  <div class="section-inner">
+    <div class="sec-head">IN ACTION</div>
+
+    <!-- chat interface -->
+    <div class="showcase">
+      <div class="shot-frame">
+        <div class="shot-bar"><span class="dot" style="color:var(--purple)">●</span> main-chat.png — chat interface</div>
+        <img src="main-chat.png" alt="HyperLite chat interface" />
+      </div>
+      <div class="showcase-copy">
+        <div class="label">chat_interface</div>
+        <h2>Talk to any local model — no daemon required</h2>
+        <p>The main chat view streams tokens directly from the inference server. Hardware details — CPU, RAM, GPU — are visible in the sidebar at all times. The active model, agent, and working directory are pinned in the footer.</p>
+        <p>Switching models is <span class="hi">Ctrl+M</span>. Switching agents is <span class="hi">Ctrl+A</span>. The sidebar auto-hides on narrow terminals and stays out of your way.</p>
+        <p>Token speed is shown live after every response. On an RTX 4090 with a 14B model, expect <span class="hi-g">50+ tok/s</span>.</p>
+        <div class="tag-row">
+          <span class="tag t">Direct GGUF</span>
+          <span class="tag">SSE streaming</span>
+          <span class="tag">hardware detection</span>
+          <span class="tag t">multi-session</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- model downloader -->
+    <div class="showcase flip">
+      <div class="shot-frame dim-border">
+        <div class="shot-bar"><span class="dot" style="color:var(--border)">●</span> model-downloader.png — model picker</div>
+        <img src="model-downloader.png" alt="HyperLite model picker and downloader" />
+      </div>
+      <div class="showcase-copy">
+        <div class="label">model_picker</div>
+        <h2>Download and manage models without leaving the terminal</h2>
+        <p>The built-in model picker lists recommended GGUF models filtered to your hardware. It shows size on disk, a plain-English description, and a checkmark for already-downloaded models.</p>
+        <p>Select a model and press <span class="hi">Enter</span> to download directly from HuggingFace CDN with a live progress bar. Downloads use a no-timeout HTTP client so multi-gigabyte files complete without interruption.</p>
+        <p>Models are saved to <span class="hi">~/.hyperlite/models/</span> and available immediately — no restart needed.</p>
+        <div class="tag-row">
+          <span class="tag g">HuggingFace CDN</span>
+          <span class="tag">hardware filtering</span>
+          <span class="tag t">live progress</span>
+          <span class="tag">SmolLM2 → Llama 3.3 70B</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- command palette -->
+    <div class="showcase">
+      <div class="shot-frame dim-border">
+        <div class="shot-bar"><span class="dot" style="color:var(--border)">●</span> sessions-tab.png — command palette</div>
+        <img src="sessions-tab.png" alt="HyperLite command palette" />
+      </div>
+      <div class="showcase-copy">
+        <div class="label">command_palette</div>
+        <h2>Everything keyboard driven — no mouse required</h2>
+        <p>Press <span class="hi">Ctrl+K</span> to open the command palette. Sessions, display settings, actions, and options are all a keystroke away. Fork a session, compact history, stash a draft, open a folder — without touching the mouse.</p>
+        <p>Tab between panels. Arrow keys navigate. <span class="hi">Enter</span> runs. <span class="hi">Esc</span> closes. The same interaction model runs everywhere — chat input, model picker, session list.</p>
+        <div class="tag-row">
+          <span class="tag">session management</span>
+          <span class="tag t">fork &amp; compact</span>
+          <span class="tag">draft stash</span>
+          <span class="tag t">Ctrl+K</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- tools -->
+<div class="section" id="tools">
+  <div class="section-inner">
+    <div class="sec-head">TOOL SYSTEM</div>
+    <div class="tools-block">
+      <div class="cmd">hyperlite --list-tools</div>
+      <div class="sub">18 tools · native function calling (OpenAI format) + tag-based XML (any model)</div>
+      <div class="tool-list">
+        <div class="tl">read_file</div>
+        <div class="tl">batch_read</div>
+        <div class="tl">list_dir</div>
+        <div class="tl">tree</div>
+        <div class="tl">glob</div>
+        <div class="tl">grep</div>
+        <div class="tl">file_info</div>
+        <div class="tl">make_plan</div>
+        <div class="tl">create_dir</div>
+        <div class="tl">move_file</div>
+        <div class="tl">copy_file</div>
+        <div class="tl">append_file</div>
+        <div class="tl">search</div>
+        <div class="tl">http_fetch</div>
+        <div class="tl y">write_file</div>
+        <div class="tl y">edit_file</div>
+        <div class="tl y">delete_file</div>
+        <div class="tl y">shell</div>
+      </div>
+      <div class="tools-note">
+        <span class="y">⚡ permission gate</span> — tools that modify the filesystem or run commands show an interactive confirmation dialog. approve once · approve all · deny.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- backends -->
+<div class="section" id="backends">
+  <div class="section-inner">
+    <div class="sec-head">BACKENDS</div>
+    <p style="font-size:0.7rem;color:var(--dim);margin-bottom:1.25rem">All backends probed concurrently at startup. Only reachable servers appear in the model picker.</p>
+    <table class="prov-table">
+      <thead>
+        <tr><th>backend</th><th>port</th><th>formats</th><th></th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="n">Direct GGUF</td><td class="port">18080</td><td class="fmt">GGUF · GGML</td><td><span class="auto">auto-managed</span></td></tr>
+        <tr><td class="n">llama.cpp</td><td class="port">8080</td><td class="fmt">GGUF · GGML</td><td style="color:var(--dim);font-size:0.68rem">external</td></tr>
+        <tr><td class="n">LM Studio</td><td class="port">1234</td><td class="fmt">GGUF · EXL2</td><td style="color:var(--dim);font-size:0.68rem">external</td></tr>
+        <tr><td class="n">KoboldCpp</td><td class="port">5001</td><td class="fmt">GGUF · GGML</td><td style="color:var(--dim);font-size:0.68rem">external</td></tr>
+        <tr><td class="n">text-generation-webui</td><td class="port">5000</td><td class="fmt">GGUF · GPTQ · AWQ · EXL2 · SafeTensors</td><td style="color:var(--dim);font-size:0.68rem">external</td></tr>
+        <tr><td class="n">LocalAI</td><td class="port">8080</td><td class="fmt">GGUF · GPTQ · SafeTensors · ONNX</td><td style="color:var(--dim);font-size:0.68rem">external</td></tr>
+        <tr><td class="n">vLLM</td><td class="port">8000</td><td class="fmt">SafeTensors · GPTQ · AWQ · EXL2</td><td style="color:var(--dim);font-size:0.68rem">external</td></tr>
+        <tr><td class="n">Jan.ai</td><td class="port">1337</td><td class="fmt">GGUF</td><td style="color:var(--dim);font-size:0.68rem">external</td></tr>
+        <tr><td class="n">GPT4All</td><td class="port">4891</td><td class="fmt">GGUF</td><td style="color:var(--dim);font-size:0.68rem">external</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- install -->
+<div class="section" id="install">
+  <div class="section-inner">
+    <div class="sec-head">INSTALL</div>
+    <div class="install-grid">
+      <div class="iblock">
+        <div class="iblock-head"><span class="d">●</span> Linux x64 · macOS · Windows</div>
+        <div class="iblock-body">
+          <div class="lc">npm install -g hyperlite-ai</div>
+          <div class="lc">hl</div>
+          <div class="lm">or: hyperlite</div>
+          <div class="lo">native binary selected automatically</div>
+        </div>
+      </div>
+      <div class="iblock">
+        <div class="iblock-head"><span class="dt">●</span> Raspberry Pi 5 (ARM64)</div>
+        <div class="iblock-body">
+          <div class="lc">npm install -g @hyperlite-ai/hyperlite-pi</div>
+          <div class="lc">hl</div>
+          <div class="lm">builds llama-server natively on first run</div>
+          <div class="lo">GGML_NATIVE=ON · NEON SIMD · Cortex-A76</div>
+        </div>
+      </div>
+      <div class="iblock">
+        <div class="iblock-head"><span class="dg">●</span> first launch</div>
+        <div class="iblock-body">
+          <div class="lo">setup wizard opens</div>
+          <div class="lo">hardware detected — models filtered to fit</div>
+          <div class="lo">download models from HuggingFace</div>
+          <div class="lo">runtime downloaded automatically</div>
+          <div class="lo">offline forever after that</div>
+        </div>
+      </div>
+      <div class="iblock">
+        <div class="iblock-head"><span style="color:var(--dim)">●</span> requirements</div>
+        <div class="iblock-body">
+          <div class="lo">Node.js 16+ (launcher only)</div>
+          <div class="lo">4 GB RAM minimum · 8 GB recommended</div>
+          <div class="lo">internet for first model download only</div>
+          <div class="lm">models stored in ~/.hyperlite/models/</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- keybinds -->
+<div class="section" id="keys">
+  <div class="section-inner">
+    <div class="sec-head">KEYBINDINGS</div>
+    <div class="kb-grid">
+      <div class="kb"><span class="kb-a">Send message</span><span class="kb-k">Enter</span></div>
+      <div class="kb"><span class="kb-a">Insert newline</span><span class="kb-k">Alt+Enter</span></div>
+      <div class="kb"><span class="kb-a">Model picker</span><span class="kb-k">Ctrl+M</span></div>
+      <div class="kb"><span class="kb-a">Command palette</span><span class="kb-k">Ctrl+K</span></div>
+      <div class="kb"><span class="kb-a">New session</span><span class="kb-k">Ctrl+N</span></div>
+      <div class="kb"><span class="kb-a">Session list</span><span class="kb-k">Ctrl+S</span></div>
+      <div class="kb"><span class="kb-a">Agent picker</span><span class="kb-k">Ctrl+A</span></div>
+      <div class="kb"><span class="kb-a">Toggle sidebar</span><span class="kb-k">Ctrl+\</span></div>
+      <div class="kb"><span class="kb-a">Interrupt</span><span class="kb-k">Ctrl+C</span></div>
+      <div class="kb"><span class="kb-a">Copy last response</span><span class="kb-k">Ctrl+L</span></div>
+      <div class="kb"><span class="kb-a">Scroll messages</span><span class="kb-k">↑ / ↓</span></div>
+      <div class="kb"><span class="kb-a">Quit</span><span class="kb-k">Ctrl+Q</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- footer -->
+<div class="footer-wrap">
+  <div class="footer">
+    <span class="footer-logo">Hyper<span>Lite</span></span>
+    <div class="footer-links">
+      <a href="https://github.com/Sean504/HyperLite" target="_blank">github</a>
+      <a href="https://github.com/Sean504/HyperLite/releases" target="_blank">releases</a>
+      <a href="https://www.npmjs.com/package/hyperlite-ai" target="_blank">npm</a>
+      <a href="https://github.com/Sean504/HyperLite/blob/main/DOCS.md" target="_blank">docs</a>
+    </div>
+    <span>MIT · hyperlite.org · no cloud · no telemetry</span>
+  </div>
+</div>
+
+</body>
+</html>
