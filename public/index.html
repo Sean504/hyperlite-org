@@ -362,7 +362,7 @@
       grid-template-columns: 1fr 1fr;
       gap: 1rem;
     }
-    .iblock { background: var(--surface); border: 1px solid var(--border); }
+    .iblock { background: var(--surface); border: 1px solid var(--border); overflow: hidden; }
     .iblock-head {
       background: var(--bg2);
       border-bottom: 1px solid var(--border);
@@ -374,13 +374,12 @@
     .iblock-head .d { color: var(--purple); }
     .iblock-head .dt { color: var(--teal); }
     .iblock-head .dg { color: var(--green); }
-    .iblock-body { padding: 0.85rem 1rem; font-size: 0.73rem; line-height: 2; overflow-x: auto; }
-    .lc, .lo, .lm { white-space: nowrap; }
-    .lc { color: var(--text); }
+    .iblock-body { padding: 0.85rem 1rem; font-size: 0.73rem; line-height: 2; }
+    .lc { color: var(--text); word-break: break-all; }
     .lc::before { content: '$ '; color: var(--teal); }
-    .lo { color: var(--green); }
+    .lo { color: var(--green); word-break: break-word; }
     .lo::before { content: '→ '; color: var(--dim); }
-    .lm { color: var(--dim); }
+    .lm { color: var(--dim); word-break: break-word; }
     .lm::before { content: '# '; }
 
     /* ── keybinds ────────────────────────────────────────────────────── */
