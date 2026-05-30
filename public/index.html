@@ -404,6 +404,31 @@
     .footer-links a:hover { color: var(--teal); }
 
     /* ── responsive ──────────────────────────────────────────────────── */
+
+    /* logo: allow horizontal scroll on tiny screens rather than overflowing body */
+    .logo-wrap {
+      display: block;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      text-align: left;
+    }
+
+    /* section headers: clip trailing dashes cleanly */
+    .sec-head {
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    /* install pill: never wider than the viewport */
+    .install-pill { max-width: 100%; }
+
+    /* provider table: scrollable on mobile */
+    .table-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
     @media (max-width: 860px) {
       .showcase, .showcase.flip { grid-template-columns: 1fr; direction: ltr; }
       .feat-grid { grid-template-columns: 1fr 1fr; }
@@ -411,11 +436,27 @@
       .kb-grid { grid-template-columns: 1fr 1fr; }
       .tool-list { grid-template-columns: repeat(2, 1fr); }
       .topbar-nav { display: none; }
+      .section { padding: 2.5rem 1.25rem; }
+      .showcase { gap: 2rem; margin-bottom: 3rem; }
     }
+
     @media (max-width: 540px) {
       .feat-grid { grid-template-columns: 1fr; }
       .kb-grid { grid-template-columns: 1fr; }
       .logo-wrap pre { font-size: 0.42rem; }
+      .section { padding: 2rem 1rem; }
+      .hero-inner { padding: 1.5rem 1rem 2rem; }
+      .hero-sub { font-size: 0.68rem; letter-spacing: 0.04em; }
+      .hero-meta { font-size: 0.68rem; margin-bottom: 1.5rem; }
+      .install-pill { font-size: 0.72rem; padding: 0.45rem 0.8rem; }
+      .showcase-copy h2 { font-size: 0.9rem; }
+      .prov-table th:nth-child(3),
+      .prov-table td:nth-child(3) { display: none; }
+    }
+
+    @media (max-width: 380px) {
+      .logo-wrap pre { font-size: 0.36rem; }
+      .tool-list { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -609,6 +650,7 @@
   <div class="section-inner">
     <div class="sec-head">BACKENDS</div>
     <p style="font-size:0.7rem;color:var(--dim);margin-bottom:1.25rem">All backends probed concurrently at startup. Only reachable servers appear in the model picker.</p>
+    <div class="table-scroll">
     <table class="prov-table">
       <thead>
         <tr><th>backend</th><th>port</th><th>formats</th><th></th></tr>
@@ -625,6 +667,7 @@
         <tr><td class="n">GPT4All</td><td class="port">4891</td><td class="fmt">GGUF</td><td style="color:var(--dim);font-size:0.68rem">external</td></tr>
       </tbody>
     </table>
+    </div>
   </div>
 </div>
 
