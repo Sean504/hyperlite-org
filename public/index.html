@@ -119,9 +119,10 @@
     }
 
     .logo-wrap {
-      display: inline-block;
-      max-width: 100%;
-      overflow-x: hidden;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      overflow: hidden;
       margin-bottom: 0.9rem;
       animation: flicker 9s infinite;
     }
@@ -129,6 +130,7 @@
       font-family: var(--mono);
       font-size: clamp(0.55rem, 1.37vw, 0.94rem);
       line-height: 1.2; white-space: pre; text-align: left;
+      overflow: hidden;
       color: var(--purple);
       text-shadow: 0 0 18px rgba(189,147,249,0.55), 0 0 40px rgba(189,147,249,0.18);
     }
@@ -354,7 +356,6 @@
           </a>
         </div>
       </div>
-      <a href="https://github.com/Sean504/HyperLite" target="_blank">github</a>
     </nav>
   </div>
   <div class="topbar-right">hyperlite.org</div>
@@ -497,6 +498,77 @@
   </div>
 </div>
 
+<!-- hyperlite-pi -->
+<div class="section pi-section" id="pi">
+  <div class="section-inner">
+    <div class="sec-head">HYPERLITE-PI</div>
+
+    <p style="font-size:0.78rem;color:var(--muted);max-width:680px;margin-bottom:2.5rem;line-height:1.7">
+      A purpose-built variant for the <span style="color:var(--teal)">Raspberry Pi 5</span> and ARM64 single-board computers.
+      Stripped down and optimised — no RAG embedding overhead, no memory embedding model, no ONNX runtime.
+      Just a native ARM64 binary and the fastest possible inference for the hardware.
+    </p>
+
+    <div class="pi-grid">
+      <div>
+        <div style="font-family:var(--mono);font-size:0.75rem;color:var(--muted);margin-bottom:0.75rem">Performance on Pi 5 16 GB · Q4_K_M · native ARM64 (no QEMU)</div>
+        <table class="perf-table">
+          <thead><tr><th>Model</th><th>Params</th><th>Tokens/sec</th></tr></thead>
+          <tbody>
+            <tr><td class="model-name">SmolLM2</td><td>1.7B</td><td class="speed">35–50</td></tr>
+            <tr><td class="model-name">Qwen2.5</td><td>3B</td><td class="speed">22–32</td></tr>
+            <tr><td class="model-name">Phi-4 Mini</td><td>3.8B</td><td class="speed">18–28</td></tr>
+            <tr><td class="model-name">Llama 3.2</td><td>3B</td><td class="speed">20–30</td></tr>
+            <tr><td class="model-name">Mistral</td><td>7B</td><td class="speed">10–14</td></tr>
+            <tr><td class="model-name">Llama 3.1</td><td>8B</td><td class="speed">9–13</td></tr>
+          </tbody>
+        </table>
+        <div class="pi-install">
+          <div class="iblock">
+            <div class="iblock-head"><span class="dt">●</span> Raspberry Pi 5 · ARM64</div>
+            <div class="iblock-body">
+              <div class="lc">npm install -g @hyperlite-ai/hyperlite-pi</div>
+              <div class="lc">hl</div>
+              <div class="lm">compiles llama-server natively on first run (~15 min)</div>
+              <div class="lo">GGML_NATIVE=ON · NEON SIMD · Cortex-A76</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pi-notes">
+        <div class="pi-note">
+          <div class="pi-note-icon">⚡</div>
+          <div>
+            <h4>Native ARM64 — no QEMU</h4>
+            <p>The standard llamafile is an x86_64 binary. Running it on a Pi triggers QEMU emulation — 5–10× slower. HyperLite-PI compiles <code style="color:var(--teal)">llama-server</code> natively from source on first launch, targeting Cortex-A76 directly.</p>
+          </div>
+        </div>
+        <div class="pi-note">
+          <div class="pi-note-icon">🧠</div>
+          <div>
+            <h4>GGML_NATIVE=ON</h4>
+            <p>Compiler auto-detects the CPU and enables every available instruction set — NEON SIMD, int8 dot product, hardware AES. All the gains from the silicon already in the Pi.</p>
+          </div>
+        </div>
+        <div class="pi-note">
+          <div class="pi-note-icon">💾</div>
+          <div>
+            <h4>KV cache quantisation + mlock</h4>
+            <p>KV cache stored at Q8 instead of F16 — halves memory bandwidth per token. Model weights locked in RAM with <code style="color:var(--teal)">--mlock</code> — no page faults during inference.</p>
+          </div>
+        </div>
+        <div class="pi-note">
+          <div class="pi-note-icon">🪶</div>
+          <div>
+            <h4>Lightweight by design</h4>
+            <p>No ONNX runtime, no fastembed, no embedding model download. RAG, persistent memory, and the git agent are intentionally excluded — a Pi needs every bit of RAM for the LLM, not infrastructure overhead.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- tools -->
 <div class="section" id="tools">
   <div class="section-inner">
@@ -625,79 +697,6 @@
           <div class="lc">hl</div>
           <div class="lm">builds llama-server natively on first run</div>
           <div class="lo">see HyperLite-PI section below ↓</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- hyperlite-pi -->
-<div class="section pi-section" id="pi">
-  <div class="section-inner">
-    <div class="sec-head">HYPERLITE-PI</div>
-
-    <p style="font-size:0.78rem;color:var(--muted);max-width:680px;margin-bottom:2.5rem;line-height:1.7">
-      A purpose-built variant for the <span style="color:var(--teal)">Raspberry Pi 5</span> and ARM64 single-board computers.
-      Stripped down and optimised — no RAG embedding overhead, no memory embedding model, no ONNX runtime.
-      Just a native ARM64 binary and the fastest possible inference for the hardware.
-    </p>
-
-    <div class="pi-grid">
-      <div>
-        <div style="font-family:var(--mono);font-size:0.75rem;color:var(--muted);margin-bottom:0.75rem">Performance on Pi 5 16 GB · Q4_K_M · native ARM64 (no QEMU)</div>
-        <table class="perf-table">
-          <thead><tr><th>Model</th><th>Params</th><th>Tokens/sec</th></tr></thead>
-          <tbody>
-            <tr><td class="model-name">SmolLM2</td><td>1.7B</td><td class="speed">35–50</td></tr>
-            <tr><td class="model-name">Qwen2.5</td><td>3B</td><td class="speed">22–32</td></tr>
-            <tr><td class="model-name">Phi-4 Mini</td><td>3.8B</td><td class="speed">18–28</td></tr>
-            <tr><td class="model-name">Llama 3.2</td><td>3B</td><td class="speed">20–30</td></tr>
-            <tr><td class="model-name">Mistral</td><td>7B</td><td class="speed">10–14</td></tr>
-            <tr><td class="model-name">Llama 3.1</td><td>8B</td><td class="speed">9–13</td></tr>
-          </tbody>
-        </table>
-
-        <div class="pi-install">
-          <div class="iblock">
-            <div class="iblock-head"><span class="dt">●</span> Raspberry Pi 5 · ARM64</div>
-            <div class="iblock-body">
-              <div class="lc">npm install -g @hyperlite-ai/hyperlite-pi</div>
-              <div class="lc">hl</div>
-              <div class="lm">compiles llama-server natively on first run (~15 min)</div>
-              <div class="lo">GGML_NATIVE=ON · NEON SIMD · Cortex-A76</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="pi-notes">
-        <div class="pi-note">
-          <div class="pi-note-icon">⚡</div>
-          <div>
-            <h4>Native ARM64 — no QEMU</h4>
-            <p>The standard llamafile is an x86_64 binary. Running it on a Pi triggers QEMU emulation — 5–10× slower. HyperLite-PI compiles <code style="color:var(--teal)">llama-server</code> natively from source on first launch, targeting Cortex-A76 directly.</p>
-          </div>
-        </div>
-        <div class="pi-note">
-          <div class="pi-note-icon">🧠</div>
-          <div>
-            <h4>GGML_NATIVE=ON</h4>
-            <p>Compiler auto-detects the CPU and enables every available instruction set — NEON SIMD, int8 dot product, hardware AES. All the gains from the silicon already in the Pi.</p>
-          </div>
-        </div>
-        <div class="pi-note">
-          <div class="pi-note-icon">💾</div>
-          <div>
-            <h4>KV cache quantisation + mlock</h4>
-            <p>KV cache stored at Q8 instead of F16 — halves memory bandwidth per token. Model weights locked in RAM with <code style="color:var(--teal)">--mlock</code> — no page faults during inference.</p>
-          </div>
-        </div>
-        <div class="pi-note">
-          <div class="pi-note-icon">🪶</div>
-          <div>
-            <h4>Lightweight by design</h4>
-            <p>No ONNX runtime, no fastembed, no embedding model download. RAG, persistent memory, and the git agent are intentionally excluded — a Pi needs every bit of RAM for the LLM, not infrastructure overhead.</p>
-          </div>
         </div>
       </div>
     </div>
