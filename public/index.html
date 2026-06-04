@@ -263,6 +263,19 @@
     .lm { color: var(--dim); word-break: break-word; }
     .lm::before { content: '# '; }
 
+    /* ── architecture ────────────────────────────────────────────────── */
+    .arch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 2rem; }
+    .arch-block { background: var(--bg); padding: 1.4rem; transition: background 0.15s; }
+    .arch-block:hover { background: var(--surface); }
+    .arch-block .al { font-size: 0.62rem; color: var(--dim); margin-bottom: 0.55rem; letter-spacing: 0.07em; }
+    .arch-block .al::before { content: '> '; color: var(--teal); }
+    .arch-block h3 { font-size: 0.85rem; font-weight: 700; color: var(--purple); margin-bottom: 0.6rem; }
+    .arch-block p { font-size: 0.72rem; color: var(--muted); line-height: 1.75; }
+    .arch-block p + p { margin-top: 0.5rem; }
+    .arch-block .hi { color: var(--teal); }
+    .arch-block .hi-g { color: var(--green); }
+    .arch-block .hi-y { color: var(--yellow); }
+
     /* ── pi section ──────────────────────────────────────────────────── */
     .pi-section { background: linear-gradient(180deg, var(--bg) 0%, #09091a 100%); }
 
@@ -313,6 +326,7 @@
       .section { padding: 2.5rem 1.25rem; }
       .showcase { gap: 2rem; margin-bottom: 3rem; }
       .pi-grid { grid-template-columns: 1fr; }
+      .arch-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 540px) {
       .feat-grid { grid-template-columns: 1fr; }
@@ -341,6 +355,7 @@
     <span class="topbar-logo">Hyper<span>Lite</span></span>
     <nav class="topbar-nav">
       <a href="#features">features</a>
+      <a href="#architecture">architecture</a>
       <a href="#tools">tools</a>
       <a href="#install">install</a>
       <div class="nav-dropdown">
@@ -391,47 +406,47 @@
       <div class="feat">
         <div class="fl">offline_first</div>
         <h3>Zero cloud</h3>
-        <p>No API keys. No usage tracking. No network after the initial model download. Everything runs on your hardware.</p>
+        <p>No API keys. No usage tracking. No network after the initial model download. Everything runs on your hardware — inference, search, memory, git operations.</p>
       </div>
       <div class="feat">
         <div class="fl">performance</div>
-        <h3>Rust all the way down</h3>
-        <p>TUI visible in milliseconds. Sessions load instantly. Streamed tokens hit the screen with no runtime overhead.</p>
+        <h3>GPU acceleration built in</h3>
+        <p>On Linux and WSL2, HyperLite detects your GPU at startup and routes inference through Ollama automatically — full CUDA on NVIDIA, ROCm on AMD. A 7B model on an RTX 4090 runs at <span style="color:var(--green)">40–60 tok/s</span>. On CPU the same model does 3–5. If Ollama isn't installed, HyperLite installs it. Context window size is derived from your actual VRAM — not a hardcoded default.</p>
       </div>
       <div class="feat">
         <div class="fl">agentic</div>
         <h3>Tools built in</h3>
-        <p>26 tools — files, shell, web, git, RAG, memory. The model reads, writes, searches, and chains multi-step tasks inside your terminal.</p>
+        <p>36 tools — files, shell, web, git, documents, system, RAG, memory. The model reads, writes, searches, and chains multi-step tasks. Every file write is intercepted and shown as a diff before anything touches disk.</p>
       </div>
       <div class="feat">
-        <div class="fl">rag <span class="new">new</span></div>
+        <div class="fl">git</div>
+        <h3>Full git workflow</h3>
+        <p>Read and write — status, log, diff, blame, add, commit, push, pull, branch, stash. When a push or pull fails because credentials aren't set up, a guided dialog walks you through creating a GitHub token and stores it via git's own credential system. Nothing is stored by HyperLite directly.</p>
+      </div>
+      <div class="feat">
+        <div class="fl">documents</div>
+        <h3>Work with real files</h3>
+        <p>Read PDFs, parse CSVs with per-column stats, scrape web pages into clean readable text, manage Markdown task lists, check what's using your ports, see what's consuming RAM. Tools that handle the things people actually run into.</p>
+      </div>
+      <div class="feat">
+        <div class="fl">sandbox</div>
+        <h3>Isolated shell execution</h3>
+        <p>Enable sandbox mode and shell commands run inside bubblewrap — the working directory is mounted read-write, everything else is isolated. Changes to home, tmp, and root don't persist. If bubblewrap isn't installed, HyperLite installs it.</p>
+      </div>
+      <div class="feat">
+        <div class="fl">rag</div>
         <h3>Codebase indexing</h3>
         <p>Index an entire repo with local embeddings. Relevant chunks are retrieved and injected before each message — semantic search over your whole project, fully offline.</p>
       </div>
       <div class="feat">
-        <div class="fl">memory <span class="new">new</span></div>
+        <div class="fl">memory</div>
         <h3>Persistent memory</h3>
-        <p>Save facts the model carries across every session — preferences, project details, recurring patterns. Stored in SQLite, retrieved by semantic similarity.</p>
-      </div>
-      <div class="feat">
-        <div class="fl">git_agent <span class="new">new</span></div>
-        <h3>Git-native agent</h3>
-        <p>Opt-in git integration. Injects current branch, staged changes, diff stats, and unpushed commits into every prompt. Plus <code style="color:var(--teal)">git_status</code>, <code style="color:var(--teal)">git_log</code>, <code style="color:var(--teal)">git_diff</code>, and <code style="color:var(--teal)">git_blame</code> tools.</p>
-      </div>
-      <div class="feat">
-        <div class="fl">any_backend</div>
-        <h3>Works with everything</h3>
-        <p>llamafile (auto-managed), llama.cpp, Ollama, LM Studio, KoboldCpp, LocalAI, vLLM, Jan, text-generation-webui, GPT4All.</p>
-      </div>
-      <div class="feat">
-        <div class="fl">rendering</div>
-        <h3>Rich TUI</h3>
-        <p>Full markdown, syntax highlighting, collapsible reasoning blocks, fuzzy session search, and a reorganized command palette with Sessions / Agent / Display / Options tabs.</p>
+        <p>Save facts the model carries across every session — preferences, project details, recurring patterns. Stored in SQLite, retrieved by semantic similarity at the start of each conversation.</p>
       </div>
       <div class="feat">
         <div class="fl">persistence</div>
-        <h3>Session history</h3>
-        <p>Every conversation in SQLite with WAL mode and 256 MB mmap. Instant load. Fuzzy search across all sessions.</p>
+        <h3>Sessions that survive everything</h3>
+        <p>Every conversation in SQLite. Switch models mid-session and HyperLite compacts the full history into a clean summary before handing off — the new model starts with accurate context, not a confused transcript.</p>
       </div>
     </div>
   </div>
@@ -450,9 +465,9 @@
         <div class="label">chat_interface</div>
         <h2>Talk to any local model — no daemon required</h2>
         <p>Tokens stream directly from the inference server. Hardware — CPU, RAM, GPU — visible in the sidebar. Model and provider shown at a glance. Agent tab in the command palette controls everything AI-related.</p>
-        <p>Switching models is <span class="hi">Ctrl+M</span>. Switching agents is <span class="hi">Ctrl+A</span>. On an RTX 4090 with a 14B model, expect <span class="hi-g">50+ tok/s</span>.</p>
+        <p>Switching models is <span class="hi">Alt+P</span>. Switching agents is <span class="hi">Ctrl+A</span>. On an RTX 4090 with a 14B model, expect <span class="hi-g">50+ tok/s</span>. Switching models mid-conversation compacts the session history first so the new model starts clean.</p>
         <div class="tag-row">
-          <span class="tag t">Direct GGUF</span>
+          <span class="tag t">CUDA · ROCm · Metal</span>
           <span class="tag">SSE streaming</span>
           <span class="tag">hardware detection</span>
           <span class="tag t">multi-session</span>
@@ -485,7 +500,7 @@
       <div class="showcase-copy">
         <div class="label">command_palette</div>
         <h2>Everything keyboard driven — no mouse required</h2>
-        <p>Press <span class="hi">Ctrl+K</span> for the command palette. Four tabs — Sessions, Agent, Display, Options. Agent tab is home to model switching, RAG indexing, memory, and git context controls.</p>
+        <p>Press <span class="hi">Ctrl+K</span> for the command palette. Four tabs — Sessions, Agent, Display, Options. Agent tab is home to model switching, RAG indexing, memory, sandbox mode, and git context controls.</p>
         <p>Tab between panels. Arrow keys navigate. <span class="hi">Enter</span> runs. <span class="hi">Esc</span> closes.</p>
         <div class="tag-row">
           <span class="tag">session management</span>
@@ -493,6 +508,51 @@
           <span class="tag y">Agent tab</span>
           <span class="tag t">Ctrl+K</span>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- architecture -->
+<div class="section" id="architecture">
+  <div class="section-inner">
+    <div class="sec-head">ARCHITECTURE</div>
+    <div class="arch-grid">
+      <div class="arch-block">
+        <div class="al">deployment</div>
+        <h3>One binary. No runtime. No setup.</h3>
+        <p>HyperLite ships as a single statically-linked binary — <span class="hi">hl</span>. No Python environment. No Node.js. No Docker. No daemon running in the background. Copy it to any machine and it runs.</p>
+        <p>The entire application — TUI, inference routing, tool execution, RAG, memory, streaming — is <span class="hi-g">~15 MB on disk</span>.</p>
+      </div>
+      <div class="arch-block">
+        <div class="al">inference</div>
+        <h3>Works with any backend. Switching is free.</h3>
+        <p>A unified provider layer speaks to Ollama, llama-server, LM Studio, Jan, GPT4All, KoboldCpp, LocalAI, vLLM, and TextGen WebUI through one interface. Switching backends is a model selection — nothing else changes. The same conversation continues, the same tools work, the same agents run.</p>
+        <p>When Ollama is present it takes priority for GPU acceleration. When it's not, HyperLite spawns llama-server with parameters derived from your actual hardware — VRAM, core count, architecture — not hardcoded defaults.</p>
+      </div>
+      <div class="arch-block">
+        <div class="al">tool_system</div>
+        <h3>The agentic loop runs on any model.</h3>
+        <p>Native function calling (OpenAI tool-use format) requires specific model support. HyperLite's tool system doesn't. It parses <span class="hi">&lt;tool_call&gt;</span> XML blocks from any model's output in real-time during streaming, executes the tool, and feeds the result back.</p>
+        <p>The result: file reads, writes, shell execution, web search, git operations, and 36 other tools work with SmolLM 1.7B the same way they work with a 70B model. The model's capability determines quality. The architecture doesn't impose a ceiling.</p>
+      </div>
+      <div class="arch-block">
+        <div class="al">writes</div>
+        <h3>File writes require approval. By design.</h3>
+        <p>Every file write is intercepted before hitting disk. The proposed change renders as a <span class="hi-g">syntax-highlighted diff</span> — green for additions, red for deletions — with the confirmation prompt appearing after all content so you read before you decide.</p>
+        <p>This isn't a setting. It's the architecture. The tool dispatcher routes <span class="hi">write_file</span> and <span class="hi">edit_file</span> through a pending diff queue before execution. Approve or discard. The AI never writes without explicit confirmation.</p>
+      </div>
+      <div class="arch-block">
+        <div class="al">data</div>
+        <h3>Local-first. All the way down.</h3>
+        <p>No telemetry. No API keys required. No cloud. Every piece of the stack runs on your machine: inference on your GPU, semantic search via local ONNX embeddings indexed into SQLite, conversation history in SQLite — session-branching capable, never leaves your machine.</p>
+        <p>The only outbound requests are ones you explicitly trigger: web search, <span class="hi">http_fetch</span>, model downloads from HuggingFace. Everything else is air-gapped by default.</p>
+      </div>
+      <div class="arch-block">
+        <div class="al">context</div>
+        <h3>Context sized to your hardware. Not a default.</h3>
+        <p>The context window is calculated at startup from real hardware detection — not a hardcoded value. A <span class="hi-g">24 GB GPU gets 32 768 tokens</span>. A 10 GB card gets 16 384. The system reads what you have and configures accordingly, per-request.</p>
+        <p>When you switch models mid-conversation, HyperLite compacts the full history using the current model before handing off — a clean factual summary the new model can work from without confusion.</p>
       </div>
     </div>
   </div>
@@ -575,7 +635,7 @@
     <div class="sec-head">TOOL SYSTEM</div>
     <div class="tools-block">
       <div class="cmd">hyperlite --list-tools</div>
-      <div class="sub">26 tools · native function calling (OpenAI format) + tag-based XML (any model)</div>
+      <div class="sub">36 tools · native function calling (OpenAI format) + tag-based XML (any model)</div>
       <div class="tool-groups">
         <div>
           <div class="tool-group-label">filesystem</div>
@@ -603,10 +663,11 @@
           <div class="tool-list">
             <div class="tl">search</div>
             <div class="tl">http_fetch</div>
+            <div class="tl">scrape_page</div>
           </div>
         </div>
         <div>
-          <div class="tool-group-label">git · new</div>
+          <div class="tool-group-label">git — read</div>
           <div class="tool-list">
             <div class="tl g">git_status</div>
             <div class="tl g">git_log</div>
@@ -615,7 +676,29 @@
           </div>
         </div>
         <div>
-          <div class="tool-group-label">rag · new</div>
+          <div class="tool-group-label">git — write</div>
+          <div class="tool-list">
+            <div class="tl y">git_add</div>
+            <div class="tl y">git_commit</div>
+            <div class="tl y">git_push</div>
+            <div class="tl y">git_pull</div>
+            <div class="tl y">git_branch</div>
+            <div class="tl y">git_stash</div>
+          </div>
+        </div>
+        <div>
+          <div class="tool-group-label">documents &amp; system</div>
+          <div class="tool-list">
+            <div class="tl g">read_pdf</div>
+            <div class="tl g">analyze_csv</div>
+            <div class="tl g">read_notes</div>
+            <div class="tl y">write_note</div>
+            <div class="tl g">system_status</div>
+            <div class="tl g">check_ports</div>
+          </div>
+        </div>
+        <div>
+          <div class="tool-group-label">rag &amp; memory</div>
           <div class="tool-list">
             <div class="tl g">index_dir</div>
             <div class="tl g">search_index</div>
@@ -625,8 +708,8 @@
         </div>
       </div>
       <div class="tools-note">
-        <span class="y">⚡ permission gate</span> — tools that modify files or run commands show a confirmation dialog. approve once · approve all · deny. &nbsp;
-        <span class="g">◆ new</span> — git and RAG tools added in v0.2.27.
+        <span class="y">⚡ permission gate</span> — tools that modify files or run commands show a diff or confirmation before executing. approve once · approve all · deny. &nbsp;
+        <span class="g">◆ read-only</span> — these tools never modify state without a separate write call.
       </div>
     </div>
   </div>
@@ -636,13 +719,13 @@
 <div class="section" id="backends">
   <div class="section-inner">
     <div class="sec-head">BACKENDS</div>
-    <p style="font-size:0.7rem;color:var(--dim);margin-bottom:1.25rem">All backends probed concurrently at startup. Only reachable servers appear in the model picker.</p>
+    <p style="font-size:0.7rem;color:var(--dim);margin-bottom:1.25rem">All backends probed concurrently at startup. Only reachable servers appear in the model picker. On Linux and WSL2, Ollama is detected first and used as the GPU inference path when available.</p>
     <div class="table-scroll">
     <table class="prov-table">
       <thead><tr><th>backend</th><th>port</th><th>formats</th><th></th></tr></thead>
       <tbody>
+        <tr><td class="n">Ollama</td><td class="port">11434</td><td class="fmt">GGUF · GGML · SafeTensors</td><td><span class="auto">GPU preferred</span></td></tr>
         <tr><td class="n">Direct GGUF</td><td class="port">18080</td><td class="fmt">GGUF · GGML</td><td><span class="auto">auto-managed</span></td></tr>
-        <tr><td class="n">Ollama <span style="color:var(--green);font-size:0.6rem">new</span></td><td class="port">11434</td><td class="fmt">GGUF · GGML · SafeTensors</td><td style="color:var(--dim);font-size:0.68rem">external</td></tr>
         <tr><td class="n">llama.cpp</td><td class="port">8080</td><td class="fmt">GGUF · GGML</td><td style="color:var(--dim);font-size:0.68rem">external</td></tr>
         <tr><td class="n">LM Studio</td><td class="port">1234</td><td class="fmt">GGUF · EXL2</td><td style="color:var(--dim);font-size:0.68rem">external</td></tr>
         <tr><td class="n">KoboldCpp</td><td class="port">5001</td><td class="fmt">GGUF · GGML</td><td style="color:var(--dim);font-size:0.68rem">external</td></tr>
@@ -692,10 +775,10 @@
       <div class="iblock">
         <div class="iblock-head"><span class="dg">●</span> first launch</div>
         <div class="iblock-body">
-          <div class="lo">setup wizard opens</div>
-          <div class="lo">hardware detected — models filtered to fit</div>
-          <div class="lo">download models from HuggingFace</div>
-          <div class="lo">runtime downloaded automatically</div>
+          <div class="lo">hardware detected — GPU, VRAM, core count</div>
+          <div class="lo">Ollama installed automatically if GPU found</div>
+          <div class="lo">models filtered to fit your hardware</div>
+          <div class="lo">download from HuggingFace with live progress</div>
           <div class="lo">offline forever after that</div>
         </div>
       </div>
@@ -708,26 +791,60 @@
   <div class="section-inner">
     <div class="sec-head">KEYBINDINGS</div>
     <div class="kb-grid">
+
+      <div style="grid-column:1/-1;background:var(--bg2);padding:0.25rem 0.9rem;font-size:0.62rem;color:var(--teal);letter-spacing:0.08em;border-bottom:1px solid var(--border)">input</div>
       <div class="kb"><span class="kb-a">Send message</span><span class="kb-k">Enter</span></div>
-      <div class="kb"><span class="kb-a">Insert newline</span><span class="kb-k">Alt+Enter</span></div>
-      <div class="kb"><span class="kb-a">Model picker</span><span class="kb-k">Ctrl+M</span></div>
-      <div class="kb"><span class="kb-a">Command palette</span><span class="kb-k">Ctrl+K</span></div>
+      <div class="kb"><span class="kb-a">New line in input</span><span class="kb-k">Alt+Enter</span></div>
+      <div class="kb"><span class="kb-a">Paste clipboard</span><span class="kb-k">Ctrl+V</span></div>
+      <div class="kb"><span class="kb-a">Copy last response</span><span class="kb-k">Ctrl+C</span></div>
+      <div class="kb"><span class="kb-a">Undo last message</span><span class="kb-k">Ctrl+Z</span></div>
+      <div class="kb"><span class="kb-a">Redo</span><span class="kb-k">Ctrl+Y</span></div>
+
+      <div style="grid-column:1/-1;background:var(--bg2);padding:0.25rem 0.9rem;font-size:0.62rem;color:var(--teal);letter-spacing:0.08em;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">scroll</div>
+      <div class="kb"><span class="kb-a">Scroll output</span><span class="kb-k">↑ / ↓  or  j / k</span></div>
+      <div class="kb"><span class="kb-a">Half page</span><span class="kb-k">Ctrl+D / Ctrl+U</span></div>
+      <div class="kb"><span class="kb-a">Full page</span><span class="kb-k">Ctrl+F / Ctrl+B</span></div>
+      <div class="kb"><span class="kb-a">Jump between messages</span><span class="kb-k">[ / ]</span></div>
+      <div class="kb"><span class="kb-a">Top / bottom</span><span class="kb-k">g / G</span></div>
+
+      <div style="grid-column:1/-1;background:var(--bg2);padding:0.25rem 0.9rem;font-size:0.62rem;color:var(--teal);letter-spacing:0.08em;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">sessions</div>
       <div class="kb"><span class="kb-a">New session</span><span class="kb-k">Ctrl+N</span></div>
       <div class="kb"><span class="kb-a">Session list</span><span class="kb-k">Ctrl+S</span></div>
-      <div class="kb"><span class="kb-a">Agent picker</span><span class="kb-k">Ctrl+A</span></div>
-      <div class="kb"><span class="kb-a">Toggle sidebar</span><span class="kb-k">Ctrl+\</span></div>
-      <div class="kb"><span class="kb-a">Interrupt</span><span class="kb-k">Ctrl+C</span></div>
-      <div class="kb"><span class="kb-a">Copy last response</span><span class="kb-k">Ctrl+L</span></div>
-      <div class="kb"><span class="kb-a">Scroll messages</span><span class="kb-k">↑ / ↓</span></div>
-      <div class="kb"><span class="kb-a">Quit</span><span class="kb-k">Ctrl+Q</span></div>
+      <div class="kb"><span class="kb-a">Rename session</span><span class="kb-k">Ctrl+R</span></div>
+      <div class="kb"><span class="kb-a">Close session</span><span class="kb-k">Ctrl+W</span></div>
+      <div class="kb"><span class="kb-a">Stash draft</span><span class="kb-k">Ctrl+D</span></div>
+      <div class="kb"><span class="kb-a">Open folder</span><span class="kb-k">Ctrl+O</span></div>
+
+      <div style="grid-column:1/-1;background:var(--bg2);padding:0.25rem 0.9rem;font-size:0.62rem;color:var(--teal);letter-spacing:0.08em;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">model &amp; agents</div>
+      <div class="kb"><span class="kb-a">Model picker</span><span class="kb-k">Alt+P</span></div>
+      <div class="kb"><span class="kb-a">Cycle model</span><span class="kb-k">Alt+M</span></div>
+      <div class="kb"><span class="kb-a">Switch agent</span><span class="kb-k">Ctrl+A</span></div>
+
+      <div style="grid-column:1/-1;background:var(--bg2);padding:0.25rem 0.9rem;font-size:0.62rem;color:var(--teal);letter-spacing:0.08em;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">display</div>
+      <div class="kb"><span class="kb-a">Command palette</span><span class="kb-k">Ctrl+K</span></div>
+      <div class="kb"><span class="kb-a">Toggle sidebar</span><span class="kb-k">Alt+\</span></div>
+      <div class="kb"><span class="kb-a">Toggle reasoning blocks</span><span class="kb-k">Ctrl+T</span></div>
+      <div class="kb"><span class="kb-a">Tool call details</span><span class="kb-k">Alt+H</span></div>
+      <div class="kb"><span class="kb-a">Cycle theme</span><span class="kb-k">Alt+T</span></div>
+      <div class="kb"><span class="kb-a">Help</span><span class="kb-k">?</span></div>
+      <div class="kb"><span class="kb-a">Quit</span><span class="kb-k">Ctrl+X</span></div>
+
     </div>
   </div>
 </div>
 
 <!-- footer -->
 <div class="footer-wrap">
-  <div class="footer">
-    <span class="footer-logo">Hyper<span>Lite</span></span>
+  <div class="footer" style="flex-direction:column;gap:1.25rem">
+    <div style="overflow:hidden;width:100%;display:flex;justify-content:center">
+      <pre style="font-family:var(--mono);font-size:clamp(0.28rem,0.72vw,0.48rem);line-height:1.2;white-space:pre;text-align:left;color:var(--purple);opacity:0.5;text-shadow:none;pointer-events:none;user-select:none"
+>  ___ ___                             <span style="color:var(--teal)">.____    .__  __         </span>
+ /   |   \ ___.__.______   ___________<span style="color:var(--teal)">|    |   |__|/  |_  ____  </span>
+/    ~    &lt;   |  |\____ \_/ __ \_  __ \<span style="color:var(--teal)">    |   |  \   __\/ __ \ </span>
+\    Y    /\___  ||  |_&gt; &gt;  ___/|  | \/<span style="color:var(--teal)">    |___|  ||  | \  ___/ </span>
+ \___|_  / / ____||   __/ \___  &gt;__|  <span style="color:var(--teal)">|_______ \__||__|  \___  &gt;</span>
+       \/  \/     |__|        \/      <span style="color:var(--teal)">        \/             \/ </span></pre>
+    </div>
     <div class="footer-links">
       <a href="https://www.npmjs.com/package/hyperlite-ai" target="_blank">npm</a>
     </div>
