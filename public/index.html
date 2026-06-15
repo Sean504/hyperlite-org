@@ -355,7 +355,9 @@
     <span class="topbar-logo">Hyper<span>Lite</span></span>
     <nav class="topbar-nav">
       <a href="#features">features</a>
+      <a href="#models">models</a>
       <a href="#architecture">architecture</a>
+      <a href="#themes">themes</a>
       <a href="#tools">tools</a>
       <a href="#install">install</a>
       <div class="nav-dropdown">
@@ -387,13 +389,20 @@
  \___|_  / / ____||   __/ \___  &gt;__|  <span class="logo-t">|_______ \__||__|  \___  &gt;</span>
        \/  \/     |__|        \/      <span class="logo-t">        \/             \/ </span></pre></div>
 
-    <div class="hero-sub">terminal-native · local-only · blazing fast · no cloud · no api key · no telemetry</div>
+    <div class="hero-sub">terminal-native · local-only · GPU-accelerated · no cloud · no api key · no telemetry</div>
     <div class="hero-meta">Linux · macOS · Windows · RPi5</div>
 
     <div class="install-pill"><span class="p">$</span> npm install -g hyperlite-ai</div>
     <div style="display:flex;align-items:center;justify-content:center;gap:0.75rem;margin-top:0.4rem">
       <span style="font-size:0.78rem;color:var(--muted)">then run</span>
       <div class="install-pill" style="margin:0"><span class="p">$</span> hl<span class="cur" style="margin-left:0.4rem"></span></div>
+    </div>
+
+    <div style="margin:2.4rem auto 0;max-width:900px">
+      <div class="shot-frame">
+        <div class="shot-bar"><span style="color:var(--purple)">●</span> <span style="color:var(--dim)">hl — first launch</span></div>
+        <img src="screenshots/new-session.png" alt="HyperLite launch screen with its pixel-art mascot, sidebar showing hardware and session info" />
+      </div>
     </div>
   </div>
 </div>
@@ -416,7 +425,7 @@
       <div class="feat">
         <div class="fl">agentic</div>
         <h3>Tools built in</h3>
-        <p>36 tools — files, shell, web, git, documents, system, RAG, memory. The model reads, writes, searches, and chains multi-step tasks. Every file write is intercepted and shown as a diff before anything touches disk.</p>
+        <p>39 tools — files, shell, web, git, documents, system, RAG, memory. The model reads, writes, searches, and chains multi-step tasks. Every file write is intercepted and shown as a diff before anything touches disk.</p>
       </div>
       <div class="feat">
         <div class="fl">git</div>
@@ -459,13 +468,13 @@
     <div class="showcase">
       <div class="shot-frame">
         <div class="shot-bar"><span style="color:var(--purple)">●</span></div>
-        <img src="main-chat.png" alt="HyperLite chat interface" />
+        <img src="screenshots/chat-session-with-tool-call.png" alt="HyperLite chat with the model calling write_file, the sidebar tracking a +7 / -0 change" />
       </div>
       <div class="showcase-copy">
         <div class="label">chat_interface</div>
         <h2>Talk to any local model — no daemon required</h2>
-        <p>Tokens stream directly from the inference server. Hardware — CPU, RAM, GPU — visible in the sidebar. Model and provider shown at a glance. Agent tab in the command palette controls everything AI-related.</p>
-        <p>Switching models is <span class="hi">Alt+P</span>. Switching agents is <span class="hi">Ctrl+A</span>. On an RTX 4090 with a 14B model, expect <span class="hi-g">50+ tok/s</span>. Switching models mid-conversation compacts the session history first so the new model starts clean.</p>
+        <p>Tokens stream straight from the inference server, and tool calls run inline — here the model wrote a file and the sidebar tracks the change as <span class="hi-g">+7 −0</span>. Hardware (CPU, RAM, GPU), model, and provider stay visible at a glance.</p>
+        <p>Switching models is <span class="hi">Alt+P</span>; switching agents is <span class="hi">Ctrl+A</span>. Change models mid-conversation and HyperLite compacts the history first, so the new model starts with clean context.</p>
         <div class="tag-row">
           <span class="tag t">CUDA · ROCm · Metal</span>
           <span class="tag">SSE streaming</span>
@@ -477,36 +486,147 @@
     <div class="showcase flip">
       <div class="shot-frame dim-border">
         <div class="shot-bar"><span style="color:var(--border)">●</span></div>
-        <img src="model-downloader.png" alt="HyperLite model picker" />
+        <img src="screenshots/model-picker-download.png" alt="HyperLite model picker — download tab with SBC / MID / HIGH tiers and quantization labels" />
       </div>
       <div class="showcase-copy">
         <div class="label">model_picker</div>
-        <h2>Download and manage models without leaving the terminal</h2>
-        <p>Built-in model picker lists recommended GGUF models filtered to your hardware. Select and press <span class="hi">Enter</span> to download directly from HuggingFace CDN with a live progress bar.</p>
-        <p>Models saved to <span class="hi">~/.hyperlite/models/</span> and available immediately. SmolLM2 1.7B to Llama 3.3 70B.</p>
+        <h2>Browse and download models, sorted to your hardware</h2>
+        <p>The picker ships with <span class="hi">30 curated GGUF models</span> in three tiers — <span class="hi-g">SBC</span> for Raspberry Pi and CPU boxes, <span class="hi">MID</span> for 8–16 GB GPUs, and <span class="hi">HIGH</span> for 24–32 GB cards. Each row shows its size and quantization, and the list is filtered to what your machine can actually run.</p>
+        <p>Pick one, press <span class="hi">Enter</span>, and it pulls from the HuggingFace CDN with a live progress bar into <span class="hi">~/.hyperlite/models/</span> — everything from Qwen3 0.6B up to Llama 3.3 70B, including vision and dedicated reasoning models.</p>
         <div class="tag-row">
-          <span class="tag g">HuggingFace CDN</span>
-          <span class="tag">hardware filtering</span>
-          <span class="tag t">live progress</span>
-          <span class="tag">Any Model</span>
+          <span class="tag g">SBC · MID · HIGH</span>
+          <span class="tag">hardware-filtered</span>
+          <span class="tag t">quant labels</span>
+          <span class="tag y">vision + reasoning</span>
         </div>
       </div>
     </div>
     <div class="showcase">
       <div class="shot-frame dim-border">
         <div class="shot-bar"><span style="color:var(--border)">●</span></div>
-        <img src="sessions-tab.png" alt="HyperLite command palette" />
+        <img src="screenshots/sessions-tab.png" alt="HyperLite session browser with searchable, timestamped sessions" />
       </div>
       <div class="showcase-copy">
-        <div class="label">command_palette</div>
-        <h2>Everything keyboard driven — no mouse required</h2>
-        <p>Press <span class="hi">Ctrl+K</span> for the command palette. Four tabs — Sessions, Agent, Display, Options. Agent tab is home to model switching, RAG indexing, memory, sandbox mode, and git context controls.</p>
-        <p>Tab between panels. Arrow keys navigate. <span class="hi">Enter</span> runs. <span class="hi">Esc</span> closes.</p>
+        <div class="label">session_history</div>
+        <h2>Sessions persist — searchable, forkable, resumable</h2>
+        <p>Every conversation is saved to a local SQLite database. Reopen the browser with <span class="hi">Ctrl+S</span> to search by title and jump back into any session — nothing is lost when you quit.</p>
+        <p>Fork a session to branch an idea without losing the original, or compact a long history into a clean summary to free up context.</p>
         <div class="tag-row">
-          <span class="tag">session management</span>
+          <span class="tag">SQLite</span>
           <span class="tag t">fork &amp; compact</span>
-          <span class="tag y">Agent tab</span>
-          <span class="tag t">Ctrl+K</span>
+          <span class="tag g">searchable</span>
+          <span class="tag t">Ctrl+S</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- models -->
+<div class="section" id="models">
+  <div class="section-inner">
+    <div class="sec-head">MODEL CATALOG</div>
+    <p style="font-size:0.78rem;color:var(--muted);max-width:720px;margin-bottom:2.5rem;line-height:1.7">
+      30 models are built into the downloader, grouped by the hardware they're meant for.
+      Sizes shown are the Q4_K_M download unless the quant says otherwise. The picker filters
+      the list to what fits your machine and labels each model with its quantization — pick one,
+      press Enter, and it pulls straight from HuggingFace.
+    </p>
+
+    <!-- SBC -->
+    <div style="font-size:0.72rem;letter-spacing:0.06em;margin-bottom:0.5rem">
+      <span style="color:var(--green);font-weight:700">SBC</span>
+      <span style="color:var(--dim)"> — Raspberry Pi · mini-PCs · CPU · laptops</span>
+    </div>
+    <div class="table-scroll" style="margin-bottom:2.25rem">
+    <table class="perf-table">
+      <thead><tr><th>Model</th><th>Size</th><th>Quant</th><th>Good at</th></tr></thead>
+      <tbody>
+        <tr><td class="model-name">Qwen3 0.6B</td><td>0.6 GB</td><td style="color:var(--purple)">Q8_0</td><td>tiniest capable · hybrid reasoning</td></tr>
+        <tr><td class="model-name">Gemma 3 1B</td><td>0.8 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>quick chat on edge devices</td></tr>
+        <tr><td class="model-name">Llama 3.2 1B</td><td>0.8 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>fast on CPU</td></tr>
+        <tr><td class="model-name">SmolLM2 1.7B</td><td>1.0 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>runs anywhere</td></tr>
+        <tr><td class="model-name">Qwen3 1.7B</td><td>1.8 GB</td><td style="color:var(--purple)">Q8_0</td><td>compact reasoning</td></tr>
+        <tr><td class="model-name">SmolLM3 3B</td><td>1.9 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>fully open · dual reasoning</td></tr>
+        <tr><td class="model-name">Llama 3.2 3B</td><td>2.0 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>solid all-rounder</td></tr>
+        <tr><td class="model-name">Qwen2.5 3B</td><td>2.0 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>multilingual</td></tr>
+        <tr><td class="model-name">Gemma 3 4B</td><td>2.5 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>text + image</td></tr>
+        <tr><td class="model-name">Qwen3 4B</td><td>2.5 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>reasoning + tools</td></tr>
+        <tr><td class="model-name">Phi-4 Mini 3.8B</td><td>2.5 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>reasoning per parameter</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <!-- MID -->
+    <div style="font-size:0.72rem;letter-spacing:0.06em;margin-bottom:0.5rem">
+      <span style="color:var(--teal);font-weight:700">MID</span>
+      <span style="color:var(--dim)"> — 8–16 GB GPUs · RTX 3060 / 4060 / 4070 / 4080</span>
+    </div>
+    <div class="table-scroll" style="margin-bottom:2.25rem">
+    <table class="perf-table">
+      <thead><tr><th>Model</th><th>Size</th><th>Quant</th><th>Good at</th></tr></thead>
+      <tbody>
+        <tr><td class="model-name">Mistral 7B</td><td>4.1 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>fast general-purpose</td></tr>
+        <tr><td class="model-name">Qwen2.5-Coder 7B</td><td>4.7 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>code</td></tr>
+        <tr><td class="model-name">Llama 3.1 8B</td><td>4.7 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>instruction following</td></tr>
+        <tr><td class="model-name">Qwen3 8B</td><td>5.0 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>reasoning · 100+ languages</td></tr>
+        <tr><td class="model-name">Gemma 3 12B</td><td>7.3 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>text + image · writing</td></tr>
+        <tr><td class="model-name">Qwen3 14B</td><td>9.0 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>reasoning</td></tr>
+        <tr><td class="model-name">Qwen2.5 14B</td><td>9.0 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>balanced all-rounder</td></tr>
+        <tr><td class="model-name">Qwen2.5-Coder 14B</td><td>9.0 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>code</td></tr>
+        <tr><td class="model-name">DeepSeek-R1 14B</td><td>9.0 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>chain-of-thought</td></tr>
+        <tr><td class="model-name">gpt-oss 20B</td><td>12.1 GB</td><td style="color:var(--teal)">MXFP4</td><td>OpenAI open MoE · agentic</td></tr>
+        <tr><td class="model-name">Mistral Small 3.2 24B</td><td>14.3 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>vision + tools</td></tr>
+        <tr><td class="model-name">Devstral 24B</td><td>14.3 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>agentic coding</td></tr>
+        <tr><td class="model-name">Qwen3-Coder 30B</td><td>18.6 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>MoE coder · 3B active</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <!-- HIGH -->
+    <div style="font-size:0.72rem;letter-spacing:0.06em;margin-bottom:0.5rem">
+      <span style="color:var(--yellow);font-weight:700">HIGH</span>
+      <span style="color:var(--dim)"> — 24–32 GB GPUs · RTX 3090 / 4090 / 5080 / 5090</span>
+    </div>
+    <div class="table-scroll">
+    <table class="perf-table">
+      <thead><tr><th>Model</th><th>Size</th><th>Quant</th><th>Good at</th></tr></thead>
+      <tbody>
+        <tr><td class="model-name">Gemma 3 27B</td><td>16.5 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>multimodal · best dense on a 24 GB card</td></tr>
+        <tr><td class="model-name">Qwen3 32B</td><td>19.8 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>flagship reasoning</td></tr>
+        <tr><td class="model-name">Qwen2.5-Coder 32B</td><td>19.9 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>top open coder</td></tr>
+        <tr><td class="model-name">Qwen2.5 32B</td><td>20.0 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>general</td></tr>
+        <tr><td class="model-name">DeepSeek-R1 32B</td><td>20.0 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>reasoning</td></tr>
+        <tr><td class="model-name">Llama 3.3 70B</td><td>43.0 GB</td><td style="color:var(--purple)">Q4_K_M</td><td>near-frontier · needs 40 GB+ VRAM or big RAM</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p style="font-size:0.66rem;color:var(--dim);margin-top:1.5rem;line-height:1.6">
+      Not limited to this list — point HyperLite at any GGUF file in <span style="color:var(--muted)">~/.hyperlite/models/</span>,
+      or connect an existing Ollama / LM Studio / llama.cpp server and use whatever you already have.
+    </p>
+  </div>
+</div>
+
+<!-- review & approve -->
+<div class="section" id="how">
+  <div class="section-inner">
+    <div class="sec-head">REVIEW &amp; APPROVE</div>
+    <div class="showcase">
+      <div class="shot-frame">
+        <div class="shot-bar"><span style="color:var(--purple)">●</span></div>
+        <img src="screenshots/review-file-changes-file-content-and-approval.png" alt="HyperLite showing a syntax-highlighted diff of a new file with apply / skip / apply-all controls" />
+      </div>
+      <div class="showcase-copy">
+        <div class="label">file_writes</div>
+        <h2>Nothing touches disk until you say so</h2>
+        <p>When the model wants to write or edit a file, HyperLite stops and shows the change as a <span class="hi-g">syntax-highlighted diff</span> — additions in green, deletions in red. You read it, then <span class="hi">apply</span>, <span class="hi">skip</span>, or apply everything at once.</p>
+        <p>Multi-file edits open a review list first, so you can step through each file before committing to any of them. It runs through the tool dispatcher itself — not a setting you can forget to switch on.</p>
+        <div class="tag-row">
+          <span class="tag g">syntax-highlighted</span>
+          <span class="tag t">per-file review</span>
+          <span class="tag">apply · skip · apply all</span>
         </div>
       </div>
     </div>
@@ -522,7 +642,7 @@
         <div class="al">deployment</div>
         <h3>One binary. No runtime. No setup.</h3>
         <p>HyperLite ships as a single statically-linked binary — <span class="hi">hl</span>. No Python environment. No Node.js. No Docker. No daemon running in the background. Copy it to any machine and it runs.</p>
-        <p>The entire application — TUI, inference routing, tool execution, RAG, memory, streaming — is <span class="hi-g">~15 MB on disk</span>.</p>
+        <p>The entire application — TUI, inference routing, tool execution, RAG, memory, streaming — is <span class="hi-g">~35 MB on disk</span>.</p>
       </div>
       <div class="arch-block">
         <div class="al">inference</div>
@@ -534,7 +654,7 @@
         <div class="al">tool_system</div>
         <h3>The agentic loop runs on any model.</h3>
         <p>Native function calling (OpenAI tool-use format) requires specific model support. HyperLite's tool system doesn't. It parses <span class="hi">&lt;tool_call&gt;</span> XML blocks from any model's output in real-time during streaming, executes the tool, and feeds the result back.</p>
-        <p>The result: file reads, writes, shell execution, web search, git operations, and 36 other tools work with SmolLM 1.7B the same way they work with a 70B model. The model's capability determines quality. The architecture doesn't impose a ceiling.</p>
+        <p>The result: file reads, writes, shell execution, web search, git operations — all 39 tools — work with SmolLM 1.7B the same way they work with a 70B model. The model's capability determines quality. The architecture doesn't impose a ceiling.</p>
       </div>
       <div class="arch-block">
         <div class="al">writes</div>
@@ -553,6 +673,112 @@
         <h3>Context sized to your hardware. Not a default.</h3>
         <p>The context window is calculated at startup from real hardware detection — not a hardcoded value. A <span class="hi-g">24 GB GPU gets 32 768 tokens</span>. A 10 GB card gets 16 384. The system reads what you have and configures accordingly, per-request.</p>
         <p>When you switch models mid-conversation, HyperLite compacts the full history using the current model before handing off — a clean factual summary the new model can work from without confusion.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- command palette -->
+<div class="section" id="palette">
+  <div class="section-inner">
+    <div class="sec-head">COMMAND PALETTE</div>
+    <p style="font-size:0.78rem;color:var(--muted);max-width:720px;margin-bottom:2.5rem;line-height:1.7">
+      One shortcut — <span style="color:var(--teal)">Ctrl+K</span> — opens everything. Four tabs cover your sessions,
+      the AI agent and its tools, display options, and editor actions. Tab between them, arrow keys to navigate,
+      Enter to run. No menus to hunt through, no mouse required.
+    </p>
+    <div class="install-grid">
+      <div class="shot-frame dim-border">
+        <div class="shot-bar"><span style="color:var(--teal)">●</span> <span style="color:var(--dim)">Sessions — new · fork · compact · drafts</span></div>
+        <img src="screenshots/command-palette-sessions.png" alt="Command palette, Sessions tab" />
+      </div>
+      <div class="shot-frame dim-border">
+        <div class="shot-bar"><span style="color:var(--teal)">●</span> <span style="color:var(--dim)">Agent — model · git · sandbox · RAG · memory</span></div>
+        <img src="screenshots/command-palette-agent.png" alt="Command palette, Agent tab" />
+      </div>
+      <div class="shot-frame dim-border">
+        <div class="shot-bar"><span style="color:var(--teal)">●</span> <span style="color:var(--dim)">Display — theme · sidebar · thinking · tools</span></div>
+        <img src="screenshots/command-palette-display.png" alt="Command palette, Display tab" />
+      </div>
+      <div class="shot-frame dim-border">
+        <div class="shot-bar"><span style="color:var(--teal)">●</span> <span style="color:var(--dim)">Options — editor · copy · undo · help</span></div>
+        <img src="screenshots/command-palette-optiona.png" alt="Command palette, Options tab" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- themes -->
+<div class="section" id="themes">
+  <div class="section-inner">
+    <div class="sec-head">THEMES</div>
+    <div class="showcase flip">
+      <div class="shot-frame">
+        <div class="shot-bar"><span style="color:var(--purple)">●</span></div>
+        <img src="screenshots/theme-picker.png" alt="HyperLite theme picker with a live color-swatch preview" />
+      </div>
+      <div class="showcase-copy">
+        <div class="label">appearance</div>
+        <h2>21 built-in themes, with a live preview</h2>
+        <p>Cycle with <span class="hi">Alt+T</span>, or pick from the palette and watch the color swatches update before you commit. Panels, diffs, and syntax highlighting all follow the active theme.</p>
+        <div class="tag-row">
+          <span class="tag">cyberpunk</span><span class="tag t">dracula</span><span class="tag">tokyonight</span>
+          <span class="tag g">catppuccin</span><span class="tag">nord</span><span class="tag y">gruvbox</span>
+          <span class="tag">monokai</span><span class="tag t">one-dark</span><span class="tag">synthwave84</span>
+          <span class="tag g">matrix</span><span class="tag">rosepine</span><span class="tag">everforest</span>
+          <span class="tag">solarized</span><span class="tag t">kanagawa</span><span class="tag">vesper</span>
+          <span class="tag">aura</span><span class="tag">palenight</span><span class="tag y">nightowl</span>
+          <span class="tag">kawaii</span><span class="tag">goth</span><span class="tag">sepia</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- agents -->
+<div class="section" id="agents">
+  <div class="section-inner">
+    <div class="sec-head">AGENTS</div>
+    <div class="showcase">
+      <div class="shot-frame">
+        <div class="shot-bar"><span style="color:var(--purple)">●</span></div>
+        <img src="screenshots/agent-selection-popup.png" alt="HyperLite agent picker — General, Build, Plan, and a New Agent option" />
+      </div>
+      <div class="showcase-copy">
+        <div class="label">agents</div>
+        <h2>Pick how the AI behaves — or define your own</h2>
+        <p>Three agents ship in the box. <span class="hi">General</span> is a conversational assistant with full tool access. <span class="hi">Build</span> is a coding agent that reads, writes, and runs shell commands. <span class="hi">Plan</span> is read-only — it explores and searches your code but never writes or executes.</p>
+        <p>Need something specific? Press <span class="hi">Ctrl+A → New Agent</span> to create one with its own system prompt and a restricted set of tools.</p>
+        <div class="tag-row">
+          <span class="tag t">General</span>
+          <span class="tag g">Build</span>
+          <span class="tag">Plan</span>
+          <span class="tag y">custom agents</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- first run -->
+<div class="section" id="firstrun">
+  <div class="section-inner">
+    <div class="sec-head">FIRST RUN</div>
+    <div class="showcase flip">
+      <div class="shot-frame dim-border">
+        <div class="shot-bar"><span style="color:var(--border)">●</span></div>
+        <img src="screenshots/startup-hardware-check.png" alt="HyperLite first-run check detecting GPU, VRAM, RAM, installed models, and offline status" />
+      </div>
+      <div class="showcase-copy">
+        <div class="label">setup</div>
+        <h2>One check on first launch, then you're offline</h2>
+        <p>The first time you run <span class="hi">hl</span>, HyperLite takes stock of your machine — GPU, VRAM, RAM — counts any models you already have, mounts the local session database, and confirms no uplink is required.</p>
+        <p>If you're missing an inference runtime it installs one, then offers a set of models filtered to your hardware. After that it opens straight to chat and runs fully offline.</p>
+        <div class="tag-row">
+          <span class="tag t">hardware detection</span>
+          <span class="tag g">auto-installs runtime</span>
+          <span class="tag">offline after setup</span>
+        </div>
       </div>
     </div>
   </div>
@@ -635,7 +861,7 @@
     <div class="sec-head">TOOL SYSTEM</div>
     <div class="tools-block">
       <div class="cmd">hyperlite --list-tools</div>
-      <div class="sub">36 tools · native function calling (OpenAI format) + tag-based XML (any model)</div>
+      <div class="sub">39 tools · native function calling (OpenAI format) + tag-based XML (any model)</div>
       <div class="tool-groups">
         <div>
           <div class="tool-group-label">filesystem</div>
@@ -830,6 +1056,56 @@
       <div class="kb"><span class="kb-a">Quit</span><span class="kb-k">Ctrl+X</span></div>
 
     </div>
+  </div>
+</div>
+
+<!-- in progress -->
+<div class="section" id="roadmap">
+  <div class="section-inner">
+    <div class="sec-head">IN PROGRESS</div>
+    <p style="font-size:0.78rem;color:var(--muted);max-width:740px;margin-bottom:0.5rem;line-height:1.7">
+      A look at what's actively being built — not finished yet, shown here so you know where it's headed.
+    </p>
+
+    <h2 style="font-size:1.05rem;font-weight:700;color:var(--purple);margin:1.75rem 0 0.5rem;line-height:1.3">
+      PenTest mode
+      <span style="font-size:0.58rem;color:var(--yellow);border:1px solid rgba(241,250,140,0.35);padding:0.05rem 0.35rem;margin-left:0.5rem;vertical-align:middle;letter-spacing:0.06em">IN DEVELOPMENT</span>
+    </h2>
+    <p style="font-size:0.75rem;color:var(--muted);max-width:740px;line-height:1.75">
+      A mode for <span style="color:var(--teal)">authorized</span> security testing. It's gated behind an explicit
+      authorization step, checks which security tools are already installed, and offers to install what's
+      missing — then lets the assistant help drive the assessment instead of you wiring tools together by hand.
+    </p>
+
+    <div class="install-grid" style="margin:1.75rem 0">
+      <div class="shot-frame dim-border">
+        <div class="shot-bar"><span style="color:#ff5277">●</span> <span style="color:var(--dim)">authorization gate</span></div>
+        <img src="screenshots/pentest-mode-auth.png" alt="PenTest mode authorization screen requiring explicit confirmation of authorized use" />
+      </div>
+      <div class="shot-frame dim-border">
+        <div class="shot-bar"><span style="color:#ff5277">●</span> <span style="color:var(--dim)">tool pre-flight check</span></div>
+        <img src="screenshots/pentest-prelight-check.png" alt="PenTest pre-flight check listing detected tools and workflow readiness" />
+      </div>
+    </div>
+
+    <p style="font-size:0.75rem;color:var(--muted);max-width:740px;line-height:1.75;margin-bottom:0.75rem">
+      The goal is a set of orchestrated workflows the assistant can run end to end:
+    </p>
+    <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1.5rem">
+      <span class="tag">Network Discovery</span>
+      <span class="tag">Web Application Scan</span>
+      <span class="tag">SMB Assessment</span>
+      <span class="tag">Credential Attack</span>
+      <span class="tag">OSINT Recon</span>
+      <span class="tag">Vulnerability Scan</span>
+      <span class="tag">Full Engagement</span>
+    </div>
+
+    <p style="font-size:0.66rem;color:var(--dim);max-width:740px;line-height:1.6;border-top:1px solid var(--border);padding-top:0.9rem">
+      For authorized penetration testing and security research only — every target requires documented
+      permission. Which workflows are available depends on the tools installed on your system. This mode is
+      still in active development.
+    </p>
   </div>
 </div>
 
